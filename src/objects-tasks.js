@@ -17,8 +17,10 @@
  *    shallowCopy({a: 2, b: { a: [1, 2, 3]}}) => {a: 2, b: { a: [1, 2, 3]}}
  *    shallowCopy({}) => {}
  */
-function shallowCopy(/* obj */) {
-  throw new Error('Not implemented');
+function shallowCopy(obj) {
+  const copy = {};
+  const result = Object.assign(copy, obj);
+  return result;
 }
 
 /**
@@ -32,8 +34,26 @@ function shallowCopy(/* obj */) {
  *    mergeObjects([{a: 1, b: 2}, {b: 3, c: 5}]) => {a: 1, b: 5, c: 5}
  *    mergeObjects([]) => {}
  */
-function mergeObjects(/* objects */) {
-  throw new Error('Not implemented');
+function mergeObjects(objects) {
+  const result = [];
+
+  objects.forEach((el) => {
+    Object.entries(el).forEach((elm) => {
+      result.push(elm);
+    });
+  });
+
+  result.map((el, i, arr) => {
+    if (arr[i - 1] !== undefined && el[0] === arr[i - 1][0]) {
+      const key = el[0];
+      const value = el[1] + arr[i - 1][1];
+      const obj = [key, value];
+      result.push(obj);
+    }
+    return el;
+  });
+
+  return Object.fromEntries(result);
 }
 
 /**
@@ -49,8 +69,10 @@ function mergeObjects(/* objects */) {
  *    removeProperties({name: 'John', age: 30, city: 'New York'}, 'age') => {name: 'John', city: 'New York'}
  *
  */
-function removeProperties(/* obj, keys */) {
-  throw new Error('Not implemented');
+function removeProperties(obj, keys) {
+  const result = obj;
+  keys.forEach((el) => delete result[el]);
+  return result;
 }
 
 /**
@@ -65,8 +87,21 @@ function removeProperties(/* obj, keys */) {
  *    compareObjects({a: 1, b: 2}, {a: 1, b: 2}) => true
  *    compareObjects({a: 1, b: 2}, {a: 1, b: 3}) => false
  */
-function compareObjects(/* obj1, obj2 */) {
-  throw new Error('Not implemented');
+function compareObjects(obj1, obj2) {
+  const obj1Entries = Object.entries(obj1);
+  const obj2Entries = Object.entries(obj2);
+
+  if (obj1Entries.length !== obj2Entries.length) return false;
+
+  for (let i = 0; i < obj1Entries.length; i += 1) {
+    if (
+      obj1Entries[i][0] !== obj2Entries[i][0] ||
+      obj1Entries[i][1] !== obj2Entries[i][1]
+    ) {
+      return false;
+    }
+  }
+  return true;
 }
 
 /**
@@ -80,8 +115,9 @@ function compareObjects(/* obj1, obj2 */) {
  *    isEmptyObject({}) => true
  *    isEmptyObject({a: 1}) => false
  */
-function isEmptyObject(/* obj */) {
-  throw new Error('Not implemented');
+function isEmptyObject(obj) {
+  if (!Object.keys(obj).length) return true;
+  return false;
 }
 
 /**
@@ -100,8 +136,8 @@ function isEmptyObject(/* obj */) {
  *    immutableObj.newProp = 'new';
  *    console.log(immutableObj) => {a: 1, b: 2}
  */
-function makeImmutable(/* obj */) {
-  throw new Error('Not implemented');
+function makeImmutable(obj) {
+  return Object.freeze(obj);
 }
 
 /**
@@ -114,8 +150,18 @@ function makeImmutable(/* obj */) {
  *    makeWord({ a: [0, 1], b: [2, 3], c: [4, 5] }) => 'aabbcc'
  *    makeWord({ H:[0], e: [1], l: [2, 3, 8], o: [4, 6], W:[5], r:[7], d:[9]}) => 'HelloWorld'
  */
-function makeWord(/* lettersObject */) {
-  throw new Error('Not implemented');
+function makeWord(obj) {
+  const entries = Object.entries(obj);
+  const result = [];
+
+  entries.forEach((el) => {
+    el[1].forEach((index) => {
+      const letter = el[0];
+      result[index] = letter;
+    });
+  });
+
+  return result.join('');
 }
 
 /**
@@ -132,8 +178,21 @@ function makeWord(/* lettersObject */) {
  *    sellTickets([25, 25, 50]) => true
  *    sellTickets([25, 100]) => false (The seller does not have enough money to give change.)
  */
-function sellTickets(/* queue */) {
-  throw new Error('Not implemented');
+function sellTickets(queue) {
+  let cashbox = 0;
+
+  for (let i = 0; i < queue.length; i += 1) {
+    const el = queue[i];
+    if (cashbox < el - 25) {
+      return false;
+    }
+    if (el === 25) {
+      cashbox += el;
+    } else {
+      cashbox += el - 25;
+    }
+  }
+  return true;
 }
 
 /**
@@ -149,8 +208,12 @@ function sellTickets(/* queue */) {
  *    console.log(r.height);      // => 20
  *    console.log(r.getArea());   // => 200
  */
-function Rectangle(/* width, height */) {
-  throw new Error('Not implemented');
+function Rectangle(width, height) {
+  this.width = width;
+  this.height = height;
+  this.getArea = () => {
+    return this.width * this.height;
+  };
 }
 
 /**
@@ -163,8 +226,8 @@ function Rectangle(/* width, height */) {
  *    [1,2,3]   =>  '[1,2,3]'
  *    { width: 10, height : 20 } => '{"height":10,"width":20}'
  */
-function getJSON(/* obj */) {
-  throw new Error('Not implemented');
+function getJSON(obj) {
+  return JSON.stringify(obj);
 }
 
 /**
